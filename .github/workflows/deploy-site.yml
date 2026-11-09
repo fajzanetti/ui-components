@@ -1,0 +1,14 @@
+name: Deploy do Showcase
+
+on:
+  push:
+    branches: [main]
+
+jobs:
+  trigger:
+    runs-on: ubuntu-latest
+    steps:
+      # O GITHUB_TOKEN não dispara workflows de outro repositório.
+      - run: gh workflow run deploy.yml --repo fajzanetti/fajzanetti.github.io --ref master
+        env:
+          GH_TOKEN: ${{ secrets.SITE_DEPLOY_TOKEN }}

@@ -83,7 +83,11 @@ O objetivo é copiar um componente para outro framework e reescrever só o `.tsx
 
 ## Build para deploy
 
-O repositório `fajzanetti.github.io` publica o Showcase como subpágina. Este repositório não tem workflow de deploy.
+O repositório `fajzanetti.github.io` publica o Showcase como subpágina. O build e a publicação rodam no workflow `deploy.yml` daquele repositório.
+
+O workflow `.github/workflows/deploy-site.yml` deste repositório dispara o `deploy.yml` a cada push na branch `main`.
+
+O disparo usa o secret `SITE_DEPLOY_TOKEN`. O secret guarda um token fine-grained com a permissão `Actions: Read and write` no repositório `fajzanetti.github.io`. O token tem data de validade. Depois dessa data, o disparo falha. Gere um token novo e atualize o secret.
 
 A variável `BASE_PATH` define o subcaminho do site. O valor padrão é `/`.
 
