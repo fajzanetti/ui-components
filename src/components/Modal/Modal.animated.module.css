@@ -1,0 +1,69 @@
+/* allow-discrete mantém o <dialog> na tela até a transição de saída terminar. */
+.animated {
+  translate: 0 100%;
+  transition:
+    translate var(--motion-slow) var(--ease-out),
+    scale var(--motion-base) var(--ease-out),
+    opacity var(--motion-base) var(--ease-out),
+    overlay var(--motion-slow) allow-discrete,
+    display var(--motion-slow) allow-discrete;
+}
+
+.animated[open] {
+  translate: 0 0;
+}
+
+/* O @starting-style define de onde a transição de entrada parte. */
+@starting-style {
+  .animated[open] {
+    translate: 0 100%;
+  }
+}
+
+.animated::backdrop {
+  opacity: 0;
+  transition:
+    opacity var(--motion-slow) var(--ease-out),
+    overlay var(--motion-slow) allow-discrete,
+    display var(--motion-slow) allow-discrete;
+}
+
+.animated[open]::backdrop {
+  opacity: 1;
+}
+
+@starting-style {
+  .animated[open]::backdrop {
+    opacity: 0;
+  }
+}
+
+/* Telas largas: a caixa centralizada entra com escala e fade. */
+@media (min-width: 40rem) {
+  .animated {
+    translate: 0 1rem;
+    scale: 0.96;
+    opacity: 0;
+  }
+
+  .animated[open] {
+    translate: 0 0;
+    scale: 1;
+    opacity: 1;
+  }
+
+  @starting-style {
+    .animated[open] {
+      translate: 0 1rem;
+      scale: 0.96;
+      opacity: 0;
+    }
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .animated,
+  .animated::backdrop {
+    transition: none;
+  }
+}

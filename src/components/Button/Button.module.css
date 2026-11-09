@@ -1,0 +1,111 @@
+.button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2);
+  /* Mobile-first: 44px de área de toque em todos os tamanhos. */
+  min-height: 2.75rem;
+  padding: 0 var(--space-4);
+  border: 1px solid var(--button-border, transparent);
+  border-radius: var(--radius-md);
+  background: var(--button-bg);
+  color: var(--button-fg);
+  font: inherit;
+  font-weight: 600;
+  line-height: 1.2;
+  cursor: pointer;
+  user-select: none;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.button[data-variant='primary'] {
+  --button-bg: var(--color-primary);
+  --button-bg-hover: var(--color-primary-hover);
+  --button-bg-active: var(--color-primary-active);
+  --button-fg: var(--color-on-primary);
+}
+
+.button[data-variant='secondary'] {
+  --button-bg: var(--color-surface-raised);
+  --button-bg-hover: var(--color-surface-hover);
+  --button-bg-active: var(--color-surface-active);
+  --button-fg: var(--color-text);
+  --button-border: var(--color-border);
+}
+
+.button[data-variant='ghost'] {
+  --button-bg: transparent;
+  --button-bg-hover: color-mix(in srgb, var(--color-primary) 12%, transparent);
+  --button-bg-active: color-mix(in srgb, var(--color-primary) 22%, transparent);
+  --button-fg: var(--color-primary);
+}
+
+.button[data-size='sm'] {
+  padding: 0 var(--space-3);
+  font-size: var(--text-sm);
+}
+
+.button[data-size='lg'] {
+  min-height: 3.25rem;
+  padding: 0 var(--space-6);
+  font-size: var(--text-lg);
+}
+
+.button[data-full-width] {
+  width: 100%;
+}
+
+@media (hover: hover) {
+  .button:hover:not(:disabled) {
+    background: var(--button-bg-hover);
+  }
+}
+
+.button:active:not(:disabled) {
+  background: var(--button-bg-active);
+}
+
+.button:focus-visible {
+  outline: 2px solid var(--color-focus-ring);
+  outline-offset: 2px;
+}
+
+.button:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
+.button[data-loading] {
+  cursor: progress;
+}
+
+/* A rotação informa o estado de carga. Por isso ela existe no estilo Normal. */
+.spinner {
+  width: 1em;
+  height: 1em;
+  border: 2px solid currentColor;
+  border-right-color: transparent;
+  border-radius: 50%;
+  animation: spin 0.7s linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* Com mouse, o alvo pode ser menor que 44px. */
+@media (pointer: fine) {
+  .button {
+    min-height: 2.5rem;
+  }
+
+  .button[data-size='sm'] {
+    min-height: 2rem;
+  }
+
+  .button[data-size='lg'] {
+    min-height: 3rem;
+  }
+}

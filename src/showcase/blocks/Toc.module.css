@@ -1,0 +1,45 @@
+.title {
+  margin-bottom: var(--space-2);
+  font-size: var(--text-sm);
+  font-weight: 600;
+}
+
+.list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.list .list {
+  padding-left: var(--space-3);
+}
+
+.link {
+  display: block;
+  width: 100%;
+  padding: var(--space-1) var(--space-3);
+  border: 0;
+  border-left: 2px solid transparent;
+  background: transparent;
+  font-size: var(--text-sm);
+  line-height: 1.4;
+  text-align: left;
+  color: var(--color-text-muted);
+  cursor: pointer;
+}
+
+.link[aria-current] {
+  border-left-color: var(--color-primary);
+  color: var(--color-text);
+}
+
+.link:focus-visible {
+  outline: 2px solid var(--color-focus-ring);
+  outline-offset: -2px;
+}
+
+@media (hover: hover) {
+  .link:hover {
+    color: var(--color-text);
+  }
+}

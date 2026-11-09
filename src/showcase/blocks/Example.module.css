@@ -1,0 +1,22 @@
+.example {
+  margin-top: var(--space-4);
+  overflow: hidden;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+}
+
+/* O exemplo devolve só os componentes. Este bloco centraliza e separa os itens. */
+.preview {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-3);
+  min-height: 13rem;
+  padding: var(--space-8) var(--space-5);
+}
+
+.code {
+  border-top: 1px solid var(--color-border);
+  background: var(--color-surface);
+}

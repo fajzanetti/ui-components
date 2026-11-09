@@ -1,0 +1,42 @@
+.shell {
+  --header-height: 3.5rem;
+  min-height: 100dvh;
+}
+
+.body {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+}
+
+.main {
+  min-width: 0;
+  padding: var(--space-6) var(--space-4) var(--space-12);
+}
+
+.content {
+  max-width: 68rem;
+  margin: 0 auto;
+}
+
+.backdrop {
+  position: fixed;
+  inset: var(--header-height) 0 0 0;
+  z-index: 8;
+  border: 0;
+  background: var(--color-overlay);
+}
+
+@media (min-width: 56rem) {
+  .body {
+    grid-template-columns: 16rem minmax(0, 1fr);
+    align-items: start;
+  }
+
+  .main {
+    padding: var(--space-8) var(--space-8) var(--space-12);
+  }
+
+  .backdrop {
+    display: none;
+  }
+}

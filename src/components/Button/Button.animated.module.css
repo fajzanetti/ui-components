@@ -1,0 +1,45 @@
+.animated {
+  transition:
+    background-color var(--motion-fast) var(--ease-out),
+    border-color var(--motion-fast) var(--ease-out),
+    box-shadow var(--motion-base) var(--ease-out),
+    transform var(--motion-fast) var(--ease-out);
+}
+
+@media (hover: hover) {
+  .animated:hover:not(:disabled) {
+    transform: translateY(-1px);
+    box-shadow: var(--shadow-md);
+  }
+}
+
+.animated:active:not(:disabled) {
+  transform: scale(0.97);
+  box-shadow: none;
+}
+
+.animated:focus-visible {
+  animation: focus-ring var(--motion-base) var(--ease-out);
+}
+
+@keyframes focus-ring {
+  from {
+    outline-offset: 6px;
+    outline-color: transparent;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .animated {
+    transition: none;
+  }
+
+  .animated:hover:not(:disabled),
+  .animated:active:not(:disabled) {
+    transform: none;
+  }
+
+  .animated:focus-visible {
+    animation: none;
+  }
+}
