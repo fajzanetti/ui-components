@@ -1,0 +1,28 @@
+.animated {
+  transition: box-shadow var(--motion-base) var(--ease-out);
+}
+
+.label {
+  transition:
+    color var(--motion-base) var(--ease-out),
+    background-size var(--motion-slow) var(--ease-in-out);
+}
+
+/* O seletor de filho direto exclui os <svg> dos ícones. A volta do traço dura metade da ida. */
+.animated > svg rect {
+  transition:
+    stroke-dasharray var(--motion-slow) var(--ease-in-out),
+    stroke-dashoffset var(--motion-slow) var(--ease-in-out);
+}
+
+.animated:focus-within > svg rect {
+  transition-duration: calc(var(--motion-slow) * 2);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .animated,
+  .label,
+  .animated > svg rect {
+    transition: none;
+  }
+}

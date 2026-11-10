@@ -1,0 +1,222 @@
+.root {
+  --input-border: var(--color-border-strong);
+  --input-accent: var(--color-primary);
+  display: inline-flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  width: 16rem;
+  max-width: 100%;
+}
+
+.root[data-full-width] {
+  width: 100%;
+}
+
+.label {
+  /* A largura do rótulo é a largura do texto. O preenchimento do trace depende disso. */
+  align-self: flex-start;
+  color: var(--color-text);
+  font-size: var(--text-sm);
+  font-weight: 600;
+  line-height: 1.2;
+}
+
+/* trace: um gradiente recortado no texto pinta o rótulo. A camada de destaque começa com largura 0. */
+.label:has(+ .field[data-variant='trace']) {
+  background:
+    linear-gradient(var(--input-accent), var(--input-accent)) no-repeat left / 0% 100%,
+    linear-gradient(var(--color-text), var(--color-text));
+  background-clip: text;
+  color: transparent;
+}
+
+.message {
+  margin: 0;
+  color: var(--color-text-muted);
+  font-size: var(--text-sm);
+  line-height: 1.3;
+}
+
+.field:has(.input[aria-invalid='true']) + .message {
+  color: var(--color-danger);
+}
+
+/* O <input> não aceita pseudo-elemento nem filho. O .field desenha o contorno e os estados. */
+.field {
+  /* Mobile-first: no mínimo 44px de área de toque em todos os tamanhos. */
+  --input-height: 3rem;
+  --input-padding: var(--space-3);
+  position: relative;
+  display: flex;
+  height: var(--input-height);
+  border-radius: var(--radius-md);
+  background: var(--color-surface);
+  box-shadow: inset 0 0 0 1px var(--input-border);
+  color: var(--color-text);
+  /* O Safari do iOS aplica zoom em campo com fonte menor que 16px. */
+  font-size: var(--text-md);
+}
+
+.field[data-size='sm'] {
+  --input-height: 2.75rem;
+}
+
+.field[data-size='lg'] {
+  --input-height: 3.5rem;
+  font-size: var(--text-lg);
+}
+
+.input {
+  flex: 1;
+  min-width: 0;
+  padding: 0 var(--input-padding);
+  border: 0;
+  border-radius: inherit;
+  /* O .field mostra o foco. */
+  outline: 0;
+  background: transparent;
+  font: inherit;
+  color: inherit;
+}
+
+.input::placeholder {
+  color: var(--color-text-muted);
+  opacity: 1;
+}
+
+.input:disabled {
+  cursor: not-allowed;
+}
+
+.field:has(.input:disabled) {
+  opacity: 0.55;
+}
+
+.icon {
+  display: grid;
+  flex: none;
+  place-items: center;
+  color: var(--color-text-muted);
+}
+
+.icon[data-side='start'] {
+  padding-inline-start: var(--input-padding);
+}
+
+.icon[data-side='end'] {
+  padding-inline-end: var(--input-padding);
+}
+
+.icon + .input {
+  padding-inline-start: var(--space-2);
+}
+
+.input:has(+ .icon) {
+  padding-inline-end: var(--space-2);
+}
+
+/* Um ícone clicável, como o de mostrar a senha, entra como <button>. */
+.icon button {
+  display: grid;
+  place-items: center;
+  height: 100%;
+  padding: 0 var(--space-1);
+  border: 0;
+  border-radius: var(--radius-sm);
+  background: none;
+  color: inherit;
+  cursor: pointer;
+}
+
+.icon button:focus-visible {
+  outline: 2px solid var(--color-focus-ring);
+  outline-offset: -2px;
+}
+
+@media (hover: hover) {
+  /* O hover antecipa a cor do foco. */
+  .root:has(.field:hover):not(:has(.input:disabled)) {
+    --input-border: var(--input-accent);
+  }
+
+  /* outline: o rótulo troca de cor junto com a borda. */
+  .root:has(.field[data-variant='outline']:hover):not(:has(.input:disabled)) .label {
+    color: var(--input-border);
+  }
+
+  /* trace: a camada de destaque do rótulo cresce da esquerda para a direita. */
+  .root:has(.field[data-variant='trace']:hover):not(:has(.input:disabled)) .label {
+    /* A 2ª camada mantém auto. A transição só interpola entre listas com os mesmos tipos. */
+    background-size:
+      100% 100%,
+      auto;
+  }
+
+  .icon button:hover {
+    color: var(--color-text);
+  }
+}
+
+/* outline: a borda engrossa na cor de destaque. */
+.field[data-variant='outline']:focus-within {
+  box-shadow: inset 0 0 0 2px var(--input-accent);
+}
+
+/* trace: o cálculo do traço lê a largura do .field em cqw. */
+.field[data-variant='trace'] {
+  container-type: inline-size;
+}
+
+/* O recuo de 1px põe o traço de 2px inteiro dentro do .field. */
+.trace {
+  position: absolute;
+  inset: 1px;
+  width: calc(100% - 2px);
+  height: calc(100% - 2px);
+  overflow: visible;
+  pointer-events: none;
+}
+
+/* O caminho do <rect> começa no fim do canto superior esquerdo e segue no sentido horário. */
+.trace rect {
+  --trace-radius: calc(var(--radius-md) - 1px);
+  --trace-edge-x: calc(100cqw - 2px - 2 * var(--trace-radius));
+  --trace-edge-y: calc(var(--input-height) - 2px - 2 * var(--trace-radius));
+  --trace-half: calc(var(--trace-edge-x) + var(--trace-edge-y) + pi * var(--trace-radius));
+  /* Meio arco de canto: a distância do início do caminho até o meio do canto. */
+  --trace-corner: calc(pi * var(--trace-radius) / 4);
+  rx: var(--trace-radius);
+  fill: none;
+  stroke: var(--input-accent);
+  stroke-width: 2px;
+  /* Um traço de tamanho 0 fica no meio do canto superior esquerdo. */
+  stroke-dasharray: 0 calc(2 * var(--trace-half));
+  stroke-dashoffset: var(--trace-corner);
+}
+
+/* O traço cresce para os 2 lados e fecha no canto inferior direito. */
+.field:focus-within .trace rect {
+  stroke-dasharray: calc(2 * var(--trace-half)) 0;
+  stroke-dashoffset: calc(var(--trace-half) + var(--trace-corner));
+}
+
+.root:has(.input[aria-invalid='true']) {
+  --input-border: var(--color-danger);
+  --input-accent: var(--color-danger);
+}
+
+/* Com mouse, o alvo pode ser menor que 44px e o texto menor que 16px. */
+@media (pointer: fine) {
+  .field {
+    --input-height: 2.75rem;
+  }
+
+  .field[data-size='sm'] {
+    --input-height: 2.25rem;
+    font-size: var(--text-sm);
+  }
+
+  .field[data-size='lg'] {
+    --input-height: 3.25rem;
+  }
+}
