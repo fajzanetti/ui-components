@@ -64,6 +64,8 @@ O código exibido vem dos arquivos reais, por `?raw`. Ele nunca diverge do códi
 
 ## Como adicionar um componente
 
+Leia antes o guia de estilo em [docs/component-style.md](docs/component-style.md). O guia define as variantes, os estados e o traçado.
+
 1. Crie a pasta `src/components/<Nome>/`.
 2. Escreva `<Nome>.tsx`, `<Nome>.module.css` e `<Nome>.animated.module.css`.
 3. Escreva um arquivo por exemplo em `examples/`. Cada arquivo exporta um componente como `default` e importa por `@/components/<Nome>`.
