@@ -13,9 +13,9 @@ const example = exampleLoader(
 
 const props = {
   variant: {
-    type: "'primary' | 'secondary' | 'ghost'",
-    default: "'primary'",
-    description: 'Define a variação visual.',
+    type: "'filled' | 'inverse' | 'outline' | 'trace'",
+    default: "'filled'",
+    description: 'Define a variação visual e a animação do hover e do foco.',
   },
   size: {
     type: "'sm' | 'md' | 'lg'",
@@ -46,7 +46,11 @@ const doc: ComponentDoc = {
   description: 'Dispara uma ação. Aceita todos os atributos nativos de <button>.',
   usage: example('Basic', 'Uso'),
   examples: [
-    example('Variants', 'Variantes'),
+    example(
+      'Variants',
+      'Variantes',
+      'Passe o mouse e navegue com a tecla Tab. No filled, o hover troca o tom do fundo. O inverse é o contrário do filled: o hover preenche o botão. Nos 2, o foco mostra um anel por fora do botão. No outline, a borda e o texto trocam de cor. No trace, o hover preenche o texto e traça o contorno. O foco mostra o mesmo contorno.',
+    ),
     example('Sizes', 'Tamanhos'),
     example(
       'Loading',
@@ -58,7 +62,7 @@ const doc: ComponentDoc = {
     example(
       'DisableAnimation',
       'Sem animação',
-      'A prop disableAnimation troca o estilo Animado pelo estilo Normal. Compare o hover, o clique e o foco dos 2 botões.',
+      'A prop disableAnimation troca o estilo Animado pelo estilo Normal. Compare o hover, o clique e o foco com o exemplo Variantes.',
     ),
   ],
   sources: { tsx, css, animatedCss },

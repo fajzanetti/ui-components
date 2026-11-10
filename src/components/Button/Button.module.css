@@ -1,14 +1,20 @@
 .button {
+  --button-border: var(--color-border-strong);
+  --button-accent: var(--color-primary);
+  --button-fg: var(--color-text);
+  /* Mobile-first: no mínimo 44px de área de toque em todos os tamanhos. */
+  --button-height: 3rem;
+  position: relative;
   display: inline-flex;
   align-items: center;
   justify-content: center;
   gap: var(--space-2);
-  /* Mobile-first: 44px de área de toque em todos os tamanhos. */
-  min-height: 2.75rem;
+  min-height: var(--button-height);
   padding: 0 var(--space-4);
-  border: 1px solid var(--button-border, transparent);
+  border: 0;
   border-radius: var(--radius-md);
-  background: var(--button-bg);
+  background: var(--color-surface);
+  box-shadow: inset 0 0 0 1px var(--button-border);
   color: var(--button-fg);
   font: inherit;
   font-weight: 600;
@@ -18,35 +24,14 @@
   -webkit-tap-highlight-color: transparent;
 }
 
-.button[data-variant='primary'] {
-  --button-bg: var(--color-primary);
-  --button-bg-hover: var(--color-primary-hover);
-  --button-bg-active: var(--color-primary-active);
-  --button-fg: var(--color-on-primary);
-}
-
-.button[data-variant='secondary'] {
-  --button-bg: var(--color-surface-raised);
-  --button-bg-hover: var(--color-surface-hover);
-  --button-bg-active: var(--color-surface-active);
-  --button-fg: var(--color-text);
-  --button-border: var(--color-border);
-}
-
-.button[data-variant='ghost'] {
-  --button-bg: transparent;
-  --button-bg-hover: color-mix(in srgb, var(--color-primary) 12%, transparent);
-  --button-bg-active: color-mix(in srgb, var(--color-primary) 22%, transparent);
-  --button-fg: var(--color-primary);
-}
-
 .button[data-size='sm'] {
+  --button-height: 2.75rem;
   padding: 0 var(--space-3);
   font-size: var(--text-sm);
 }
 
 .button[data-size='lg'] {
-  min-height: 3.25rem;
+  --button-height: 3.5rem;
   padding: 0 var(--space-6);
   font-size: var(--text-lg);
 }
@@ -55,19 +40,138 @@
   width: 100%;
 }
 
+.label {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.button[data-variant='filled'] {
+  --button-fg: var(--color-on-primary);
+  background: var(--button-accent);
+  box-shadow: none;
+}
+
+/* inverse: o contrário do filled. O repouso tem a cor de destaque na borda e no texto. */
+.button[data-variant='inverse'] {
+  --button-border: var(--button-accent);
+  --button-fg: var(--button-accent);
+}
+
+/* trace: um gradiente recortado no texto pinta o rótulo. A camada de destaque começa com largura 0. */
+.button[data-variant='trace'] .label {
+  background:
+    linear-gradient(var(--button-accent), var(--button-accent)) no-repeat left / 0% 100%,
+    linear-gradient(var(--color-text), var(--color-text));
+  background-clip: text;
+  color: transparent;
+}
+
+/* O texto transparente esconderia um ícone com currentColor. */
+.button[data-variant='trace'] .label > * {
+  color: var(--button-fg);
+}
+
 @media (hover: hover) {
-  .button:hover:not(:disabled) {
-    background: var(--button-bg-hover);
+  /* outline: o hover antecipa a cor do estado ativo. */
+  .button[data-variant='outline']:hover:not(:disabled) {
+    --button-border: var(--button-accent);
+    --button-fg: var(--button-accent);
+  }
+
+  /* trace: a borda fica cinza. O traço desenha o contorno na cor de destaque sobre ela. */
+  .button[data-variant='trace']:hover:not(:disabled) {
+    --button-fg: var(--button-accent);
+  }
+
+  .button[data-variant='trace']:hover:not(:disabled) .trace rect {
+    stroke-dasharray: calc(2 * var(--trace-half)) 0;
+    stroke-dashoffset: calc(var(--trace-half) + var(--trace-corner));
+  }
+
+  /* trace: a camada de destaque do rótulo cresce da esquerda para a direita. */
+  .button[data-variant='trace']:hover:not(:disabled) .label {
+    /* A 2ª camada mantém auto. A transição só interpola entre listas com os mesmos tipos. */
+    background-size:
+      100% 100%,
+      auto;
+  }
+
+  /* inverse: o hover preenche o botão com a cor de destaque. */
+  .button[data-variant='inverse']:hover:not(:disabled) {
+    --button-fg: var(--color-on-primary);
+    background: var(--button-accent);
+  }
+
+  /* filled: o fundo troca de tom. */
+  .button[data-variant='filled']:hover:not(:disabled) {
+    background: var(--color-primary-hover);
   }
 }
 
 .button:active:not(:disabled) {
-  background: var(--button-bg-active);
+  background: var(--color-surface-active);
 }
 
+/* O texto troca junto com o fundo. No toque, o inverse é pressionado sem passar pelo hover. */
+.button:is([data-variant='filled'], [data-variant='inverse']):active:not(:disabled) {
+  --button-fg: var(--color-on-primary);
+  background: var(--color-primary-active);
+}
+
+/* O contorno de cada variante mostra o foco. O outline transparente aparece no modo de cores forçadas. */
 .button:focus-visible {
-  outline: 2px solid var(--color-focus-ring);
+  outline: 2px solid transparent;
+}
+
+/* filled e inverse: o anel fica fora do botão. Ele não aparece sobre um fundo da mesma cor. */
+.button:is([data-variant='filled'], [data-variant='inverse']):focus-visible {
+  outline-color: var(--button-accent);
   outline-offset: 2px;
+}
+
+/* outline: a borda engrossa na cor de destaque. */
+.button[data-variant='outline']:focus-visible {
+  box-shadow: inset 0 0 0 2px var(--button-accent);
+}
+
+/* trace: o contorno traçado. A caixa é um container: o cálculo do perímetro lê a largura e a altura dela. */
+.trace {
+  /* O recuo de 1px põe o traço de 2px inteiro dentro do botão. */
+  --trace-inset: 1px;
+  position: absolute;
+  inset: var(--trace-inset);
+  container-type: size;
+  pointer-events: none;
+}
+
+.trace svg {
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+}
+
+/* O caminho do <rect> começa no fim do canto superior esquerdo e segue no sentido horário. */
+.trace rect {
+  --trace-radius: calc(var(--radius-md) - var(--trace-inset));
+  --trace-edge-x: calc(100cqw - 2 * var(--trace-radius));
+  --trace-edge-y: calc(100cqh - 2 * var(--trace-radius));
+  --trace-half: calc(var(--trace-edge-x) + var(--trace-edge-y) + pi * var(--trace-radius));
+  /* Meio arco de canto: a distância do início do caminho até o meio do canto. */
+  --trace-corner: calc(pi * var(--trace-radius) / 4);
+  rx: var(--trace-radius);
+  fill: none;
+  stroke: var(--button-accent);
+  stroke-width: 2px;
+  /* Um traço de tamanho 0 fica no meio do canto superior esquerdo. */
+  stroke-dasharray: 0 calc(2 * var(--trace-half));
+  stroke-dashoffset: var(--trace-corner);
+}
+
+/* O traço cresce para os 2 lados e fecha no canto inferior direito. */
+.button:focus-visible .trace rect {
+  stroke-dasharray: calc(2 * var(--trace-half)) 0;
+  stroke-dashoffset: calc(var(--trace-half) + var(--trace-corner));
 }
 
 .button:disabled {
@@ -98,14 +202,14 @@
 /* Com mouse, o alvo pode ser menor que 44px. */
 @media (pointer: fine) {
   .button {
-    min-height: 2.5rem;
+    --button-height: 2.75rem;
   }
 
   .button[data-size='sm'] {
-    min-height: 2rem;
+    --button-height: 2.25rem;
   }
 
   .button[data-size='lg'] {
-    min-height: 3rem;
+    --button-height: 3.25rem;
   }
 }

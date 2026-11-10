@@ -13,7 +13,7 @@ export default function Sizes() {
       {SIZES.map((item) => (
         <Button
           key={item}
-          variant="secondary"
+          variant="outline"
           onClick={() => {
             setSize(item)
             setOpen(true)

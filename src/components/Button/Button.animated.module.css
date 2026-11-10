@@ -1,45 +1,44 @@
 .animated {
   transition:
-    background-color var(--motion-fast) var(--ease-out),
-    border-color var(--motion-fast) var(--ease-out),
+    background-color var(--motion-base) var(--ease-out),
     box-shadow var(--motion-base) var(--ease-out),
-    transform var(--motion-fast) var(--ease-out);
-}
-
-@media (hover: hover) {
-  .animated:hover:not(:disabled) {
-    transform: translateY(-1px);
-    box-shadow: var(--shadow-md);
-  }
+    color var(--motion-base) var(--ease-out),
+    scale var(--motion-fast) var(--ease-out);
 }
 
 .animated:active:not(:disabled) {
-  transform: scale(0.97);
-  box-shadow: none;
+  scale: 0.97;
 }
 
-.animated:focus-visible {
-  animation: focus-ring var(--motion-base) var(--ease-out);
+.label {
+  transition: background-size var(--motion-slow) var(--ease-in-out);
 }
 
-@keyframes focus-ring {
-  from {
-    outline-offset: 6px;
-    outline-color: transparent;
-  }
+.label > * {
+  transition: color var(--motion-base) var(--ease-out);
+}
+
+/* A volta do traço dura metade da ida. */
+.trace rect {
+  transition:
+    stroke-dasharray var(--motion-slow) var(--ease-in-out),
+    stroke-dashoffset var(--motion-slow) var(--ease-in-out);
+}
+
+.animated:hover .trace rect,
+.animated:focus-visible .trace rect {
+  transition-duration: calc(var(--motion-slow) * 2);
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .animated {
+  .animated,
+  .label,
+  .label > *,
+  .trace rect {
     transition: none;
   }
 
-  .animated:hover:not(:disabled),
   .animated:active:not(:disabled) {
-    transform: none;
-  }
-
-  .animated:focus-visible {
-    animation: none;
+    scale: none;
   }
 }

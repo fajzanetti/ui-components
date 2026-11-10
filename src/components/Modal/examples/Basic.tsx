@@ -14,7 +14,7 @@ export default function Basic() {
         <p>O projeto e os arquivos dele saem da sua conta. Você não pode desfazer esta ação.</p>
         <div style={{ display: 'flex', gap: 'var(--space-3)', marginTop: 'var(--space-5)' }}>
           <Button onClick={close}>Excluir</Button>
-          <Button variant="ghost" onClick={close}>
+          <Button variant="outline" onClick={close}>
             Cancelar
           </Button>
         </div>

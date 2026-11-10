@@ -38,6 +38,31 @@
   }
 }
 
+.close {
+  transition:
+    color var(--motion-base) var(--ease-out),
+    box-shadow var(--motion-base) var(--ease-out);
+}
+
+/* trace: a transição faz a volta do traço, com metade do tempo da ida. */
+.trace rect {
+  transition:
+    stroke-dasharray var(--motion-slow) var(--ease-in-out),
+    stroke-dashoffset var(--motion-slow) var(--ease-in-out);
+}
+
+/* A ida usa @keyframes. Uma regra @starting-style perderia para a regra [open] do estilo Normal. */
+.animated[open] .trace rect {
+  animation: trace-in calc(var(--motion-slow) * 2) var(--ease-in-out);
+}
+
+@keyframes trace-in {
+  from {
+    stroke-dasharray: 0 calc(2 * var(--trace-half));
+    stroke-dashoffset: var(--trace-corner);
+  }
+}
+
 /* Telas largas: a caixa centralizada entra com escala e fade. */
 @media (min-width: 40rem) {
   .animated {
@@ -63,7 +88,13 @@
 
 @media (prefers-reduced-motion: reduce) {
   .animated,
-  .animated::backdrop {
+  .animated::backdrop,
+  .close,
+  .trace rect {
     transition: none;
+  }
+
+  .animated[open] .trace rect {
+    animation: none;
   }
 }

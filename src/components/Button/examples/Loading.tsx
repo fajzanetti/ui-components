@@ -12,7 +12,7 @@ export default function Loading() {
   return (
     <>
       <Button loading>Carregando</Button>
-      <Button variant="secondary" loading={saving} onClick={save}>
+      <Button variant="outline" loading={saving} onClick={save}>
         {saving ? 'Salvando' : 'Salvar'}
       </Button>
     </>

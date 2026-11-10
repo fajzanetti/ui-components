@@ -4,7 +4,7 @@ import motion from './Button.animated.module.css'
 import styles from './Button.module.css'
 
 export interface ButtonOwnProps {
-  variant?: 'primary' | 'secondary' | 'ghost'
+  variant?: 'filled' | 'inverse' | 'outline' | 'trace'
   size?: 'sm' | 'md' | 'lg'
   loading?: boolean
   fullWidth?: boolean
@@ -14,7 +14,7 @@ export interface ButtonOwnProps {
 export type ButtonProps = ButtonOwnProps & ComponentProps<'button'>
 
 export function Button({
-  variant = 'primary',
+  variant = 'filled',
   size = 'md',
   loading = false,
   fullWidth = false,
@@ -24,11 +24,13 @@ export function Button({
   children,
   ...rest
 }: ButtonProps) {
+  const animated = !disableAnimation
+
   return (
     <button
       type="button"
       {...rest}
-      className={cx(styles.button, !disableAnimation && motion.animated, className)}
+      className={cx(styles.button, animated && motion.animated, className)}
       data-variant={variant}
       data-size={size}
       data-full-width={fullWidth || undefined}
@@ -37,7 +39,14 @@ export function Button({
       disabled={disabled || loading}
     >
       {loading && <span className={styles.spinner} aria-hidden="true" />}
-      {children}
+      <span className={cx(styles.label, animated && motion.label)}>{children}</span>
+      {variant === 'trace' && (
+        <span className={cx(styles.trace, animated && motion.trace)} aria-hidden="true">
+          <svg>
+            <rect width="100%" height="100%" />
+          </svg>
+        </span>
+      )}
     </button>
   )
 }

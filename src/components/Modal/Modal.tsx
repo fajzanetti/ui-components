@@ -7,6 +7,7 @@ export interface ModalProps {
   open: boolean
   onClose: () => void
   title: string
+  variant?: 'outline' | 'trace'
   size?: 'sm' | 'md' | 'lg'
   closeOnBackdrop?: boolean
   disableAnimation?: boolean
@@ -17,6 +18,7 @@ export function Modal({
   open,
   onClose,
   title,
+  variant = 'outline',
   size = 'md',
   closeOnBackdrop = true,
   disableAnimation = false,
@@ -25,6 +27,7 @@ export function Modal({
   const dialogRef = useRef<HTMLDialogElement>(null)
   const pressedBackdrop = useRef(false)
   const titleId = useId()
+  const animated = !disableAnimation
 
   useEffect(() => {
     const dialog = dialogRef.current
@@ -47,7 +50,8 @@ export function Modal({
   return (
     <dialog
       ref={dialogRef}
-      className={cx(styles.modal, !disableAnimation && motion.animated)}
+      className={cx(styles.modal, animated && motion.animated)}
+      data-variant={variant}
       data-size={size}
       aria-labelledby={titleId}
       // A tecla Esc fecha o <dialog> sem passar pelo React. O estado `open` precisa acompanhar.
@@ -64,7 +68,12 @@ export function Modal({
           <h2 id={titleId} className={styles.title}>
             {title}
           </h2>
-          <button type="button" className={styles.close} aria-label="Fechar" onClick={onClose}>
+          <button
+            type="button"
+            className={cx(styles.close, animated && motion.close)}
+            aria-label="Fechar"
+            onClick={onClose}
+          >
             <svg width="20" height="20" viewBox="0 0 24 24" aria-hidden="true">
               <path
                 d="M6 6l12 12M18 6L6 18"
@@ -78,6 +87,13 @@ export function Modal({
         </header>
         <div className={styles.body}>{children}</div>
       </div>
+      {variant === 'trace' && (
+        <span className={cx(styles.trace, animated && motion.trace)} aria-hidden="true">
+          <svg>
+            <rect width="100%" height="100%" />
+          </svg>
+        </span>
+      )}
     </dialog>
   )
 }

@@ -162,26 +162,27 @@
   box-shadow: inset 0 0 0 2px var(--input-accent);
 }
 
-/* trace: o cálculo do traço lê a largura do .field em cqw. */
-.field[data-variant='trace'] {
-  container-type: inline-size;
+/* O contorno traçado. A caixa é um container: o cálculo do perímetro lê a largura e a altura dela. */
+.trace {
+  /* O recuo de 1px põe o traço de 2px inteiro dentro do .field. */
+  --trace-inset: 1px;
+  position: absolute;
+  inset: var(--trace-inset);
+  container-type: size;
+  pointer-events: none;
 }
 
-/* O recuo de 1px põe o traço de 2px inteiro dentro do .field. */
-.trace {
-  position: absolute;
-  inset: 1px;
-  width: calc(100% - 2px);
-  height: calc(100% - 2px);
+.trace svg {
+  width: 100%;
+  height: 100%;
   overflow: visible;
-  pointer-events: none;
 }
 
 /* O caminho do <rect> começa no fim do canto superior esquerdo e segue no sentido horário. */
 .trace rect {
-  --trace-radius: calc(var(--radius-md) - 1px);
-  --trace-edge-x: calc(100cqw - 2px - 2 * var(--trace-radius));
-  --trace-edge-y: calc(var(--input-height) - 2px - 2 * var(--trace-radius));
+  --trace-radius: calc(var(--radius-md) - var(--trace-inset));
+  --trace-edge-x: calc(100cqw - 2 * var(--trace-radius));
+  --trace-edge-y: calc(100cqh - 2 * var(--trace-radius));
   --trace-half: calc(var(--trace-edge-x) + var(--trace-edge-y) + pi * var(--trace-radius));
   /* Meio arco de canto: a distância do início do caminho até o meio do canto. */
   --trace-corner: calc(pi * var(--trace-radius) / 4);

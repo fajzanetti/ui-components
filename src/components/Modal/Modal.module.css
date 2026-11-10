@@ -1,11 +1,16 @@
 /* Mobile-first: folha inferior presa à base da tela. */
 .modal {
+  --modal-accent: var(--color-primary);
+  /* A base do contorno desce esta distância e sai da tela. A folha inferior não tem cantos na base. */
+  --modal-drop: calc(var(--radius-lg) + 2px);
   inset: auto 0 0;
   width: 100%;
   max-width: 100%;
   max-height: 85dvh;
   margin: 0;
   padding: 0;
+  /* O corpo tem a rolagem. O clip corta a base do contorno na folha inferior. */
+  overflow: clip;
   border: 0;
   border-radius: var(--radius-lg) var(--radius-lg) 0 0;
   background: var(--color-surface-raised);
@@ -56,15 +61,16 @@ html:has(.modal[open]) {
   cursor: pointer;
 }
 
+/* O outline transparente aparece no modo de cores forçadas. */
 .close:focus-visible {
-  outline: 2px solid var(--color-focus-ring);
-  outline-offset: 2px;
+  outline: 2px solid transparent;
+  box-shadow: inset 0 0 0 2px var(--modal-accent);
 }
 
 @media (hover: hover) {
+  /* O hover antecipa a cor do estado ativo. */
   .close:hover {
-    background: var(--color-surface-hover);
-    color: var(--color-text);
+    color: var(--modal-accent);
   }
 }
 
@@ -74,9 +80,58 @@ html:has(.modal[open]) {
   padding-bottom: max(var(--space-5), env(safe-area-inset-bottom));
 }
 
+/* O Modal aberto é o estado ativo. O contorno de 2px fica sobre o conteúdo. */
+.modal[data-variant='outline']::after {
+  position: absolute;
+  inset: 0 0 calc(-1 * var(--modal-drop));
+  border-radius: var(--radius-lg);
+  box-shadow: inset 0 0 0 2px var(--modal-accent);
+  content: '';
+  pointer-events: none;
+}
+
+/* O contorno traçado. A caixa é um container: o cálculo do perímetro lê a largura e a altura dela. */
+.trace {
+  position: absolute;
+  /* O recuo de 1px põe o traço de 2px inteiro dentro do Modal. */
+  inset: 1px 1px calc(1px - var(--modal-drop));
+  container-type: size;
+  pointer-events: none;
+}
+
+.trace svg {
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+}
+
+/* O caminho do <rect> começa no fim do canto superior esquerdo e segue no sentido horário. */
+.trace rect {
+  --trace-radius: calc(var(--radius-lg) - 1px);
+  --trace-edge-x: calc(100cqw - 2 * var(--trace-radius));
+  --trace-edge-y: calc(100cqh - 2 * var(--trace-radius));
+  --trace-half: calc(var(--trace-edge-x) + var(--trace-edge-y) + pi * var(--trace-radius));
+  /* Meio arco de canto: a distância do início do caminho até o meio do canto. */
+  --trace-corner: calc(pi * var(--trace-radius) / 4);
+  rx: var(--trace-radius);
+  fill: none;
+  stroke: var(--modal-accent);
+  stroke-width: 2px;
+  /* Um traço de tamanho 0 fica no meio do canto superior esquerdo. */
+  stroke-dasharray: 0 calc(2 * var(--trace-half));
+  stroke-dashoffset: var(--trace-corner);
+}
+
+/* O traço cresce para os 2 lados e fecha no canto inferior direito. */
+.modal[open] .trace rect {
+  stroke-dasharray: calc(2 * var(--trace-half)) 0;
+  stroke-dashoffset: calc(var(--trace-half) + var(--trace-corner));
+}
+
 /* Telas largas: caixa centralizada. */
 @media (min-width: 40rem) {
   .modal {
+    --modal-drop: 0px;
     inset: 0;
     width: min(100% - 2rem, var(--modal-width));
     margin: auto;

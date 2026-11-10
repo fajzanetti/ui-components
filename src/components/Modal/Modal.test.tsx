@@ -13,6 +13,18 @@ describe('Modal', () => {
 
     const dialog = screen.getByRole('dialog', { name: 'Excluir projeto' })
     expect(dialog.hasAttribute('open')).toBe(true)
+    expect(dialog.dataset.variant).toBe('outline')
+    expect(dialog.querySelector('span > svg')).toBeNull()
+  })
+
+  it('desenha o traço na variante trace', () => {
+    render(
+      <Modal open onClose={() => {}} title="Excluir projeto" variant="trace">
+        Conteúdo
+      </Modal>,
+    )
+
+    expect(screen.getByRole('dialog').querySelector('span > svg')).not.toBeNull()
   })
 
   it('mantém o dialog fechado quando open é false', () => {

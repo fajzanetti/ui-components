@@ -36,14 +36,15 @@ export function Input({
   const inputId = id ?? generatedId
   const messageId = `${inputId}-message`
   const message = error || hint
+  const animated = !disableAnimation
 
   return (
     <div className={cx(styles.root, className)} data-full-width={fullWidth || undefined}>
-      <label className={cx(styles.label, !disableAnimation && motion.label)} htmlFor={inputId}>
+      <label className={cx(styles.label, animated && motion.label)} htmlFor={inputId}>
         {label}
       </label>
       <div
-        className={cx(styles.field, !disableAnimation && motion.animated)}
+        className={cx(styles.field, animated && motion.animated)}
         data-variant={variant}
         data-size={size}
       >
@@ -65,9 +66,11 @@ export function Input({
           </span>
         )}
         {variant === 'trace' && (
-          <svg className={styles.trace} aria-hidden="true">
-            <rect width="100%" height="100%" />
-          </svg>
+          <span className={cx(styles.trace, animated && motion.trace)} aria-hidden="true">
+            <svg>
+              <rect width="100%" height="100%" />
+            </svg>
+          </span>
         )}
       </div>
       {message && (

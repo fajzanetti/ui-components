@@ -27,6 +27,11 @@ const props = {
     required: true,
     description: 'Texto do cabeçalho. Também é o nome acessível do Modal.',
   },
+  variant: {
+    type: "'outline' | 'trace'",
+    default: "'outline'",
+    description: 'Define a entrada do contorno: de uma vez ou traçado.',
+  },
   size: {
     type: "'sm' | 'md' | 'lg'",
     default: "'md'",
@@ -56,6 +61,11 @@ const doc: ComponentDoc = {
   description: 'Mostra conteúdo sobre a página e prende o foco. Usa o <dialog> nativo.',
   usage: example('Basic', 'Uso'),
   examples: [
+    example(
+      'Variants',
+      'Variantes',
+      'O Modal aberto tem um contorno de 2px na cor primária. No trace, a abertura traça o contorno do canto superior esquerdo ao canto inferior direito.',
+    ),
     example(
       'Sizes',
       'Tamanhos',
